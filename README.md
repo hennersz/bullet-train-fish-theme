@@ -1,5 +1,3 @@
-> This project is _**deprecated**_. Please use [tide](https://github.com/IlanCosman/tide). tide is compatible with this theme and has more awesome features!
-
 # Bullet Train for fish
 
 Bullet Train **for fish** is reimplementaion of
@@ -36,13 +34,13 @@ In order to use the theme, you will first need:
 ### For oh-my-fish users
 
 ```bash
-omf install https://github.com/kobanyan/bullet-train-fish-theme
+omf install https://github.com/hennersz/bullet-train-fish-theme
 ```
 
 ### For fisher users
 
 ```bash
-fisher kobanyan/bullet-train-fish-theme
+fisher hennersz/bullet-train-fish-theme
 ```
 
 ### Others
