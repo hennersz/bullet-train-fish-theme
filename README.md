@@ -250,6 +250,18 @@ Set `true` as default `VIRTUAL_ENV_DISABLE_PROMPT` value.
 |`BULLETTRAIN_EXEC_TIME_BG`|`yellow`|Background color
 |`BULLETTRAIN_EXEC_TIME_FG`|`black`|Foreground color
 
+### Dir Env (Segment Name: `dir_env`)
+
+|Variable|Default|Meaning
+|--------|-------|-------|
+|`BULLETTRAIN_DIR_ENV_SHOW`|`false`|Show/hide that segment
+|`BULLETTRAIN_DIR_ENV_BG`|`yellow`|Background colour
+|`BULLETTRAIN_DIR_ENV_FG`|`black`|Foreground colour
+|`BULLETTRAIN_DIR_ENV_PATH_SHOW`|`false`|Show the directory the env has been loaded from
+|`BULLETTRAIN_DIR_ENV_PREFIX`|``|Prefix
+|`BULLETTRAIN_DIR_ENV_NIX_PREFIX`|``|Prefix if nix is used
+|`BULLETTRAIN_DIR_ENV_NIX_MSG`|`""`|Message displayed if direnv is loaded
+
 
 ## Credits
 

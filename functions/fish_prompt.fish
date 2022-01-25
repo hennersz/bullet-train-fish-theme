@@ -140,11 +140,20 @@ function setup_parameters -d "Set default value if parameter is not declared"
   set -q BULLETTRAIN_EXEC_TIME_ELAPSED; or set -g BULLETTRAIN_EXEC_TIME_ELAPSED 5
   set -q BULLETTRAIN_EXEC_TIME_BG; or set -g BULLETTRAIN_EXEC_TIME_BG yellow
   set -q BULLETTRAIN_EXEC_TIME_FG; or set -g BULLETTRAIN_EXEC_TIME_FG black
+  # dir_env
+  set -q BULLETTRAIN_DIR_ENV_SHOW; or set -g BULLETTRAIN_DIR_ENV_SHOW
+  set -q BULLETTRAIN_DIR_ENV_BG; or set -g BULLETTRAIN_DIR_ENV_BG yellow
+  set -q BULLETTRAIN_DIR_ENV_FG; or set -g BULLETTRAIN_DIR_ENV_FG black
+  set -q BULLETTRAIN_DIR_ENV_PATH_SHOW; or set -g BULLETTRAIN_DIR_ENV_PATH_SHOW
+  set -q BULLETTRAIN_DIR_ENV_PREFIX; or set -g BULLETTRAIN_DIR_ENV_PREFIX " "
+  set -q BULLETTRAIN_DIR_ENV_NIX_PREFIX; or set -g BULLETTRAIN_DIR_ENV_NIX_PREFIX " "
+  set -q BULLETTRAIN_DIR_ENV_MSG; or set -g BULLETTRAIN_DIR_ENV_MSG 
   set -l _prompt_order \
     time \
     status \
     custom \
     context \
+    dir_env \
     dir \
     perl \
     ruby \
@@ -154,7 +163,7 @@ function setup_parameters -d "Set default value if parameter is not declared"
     git \
     hg \
     kctx \
-    cmd_exec_time
+    cmd_exec_time 
   test "$BULLETTRAIN_PROMPT_ORDER"; or set -g BULLETTRAIN_PROMPT_ORDER $_prompt_order
 end
 
@@ -536,3 +545,35 @@ function prompt_cmd_exec_time -d "Show last command exection time"
           $BULLETTRAIN_EXEC_TIME_FG \
           (displaytime $_duration);
 end
+
+function prompt_dir_env
+  test "$BULLETTRAIN_DIR_ENV_SHOW" = "true"; or return
+
+  set -l _dir_env_prompt
+  if set -q DIRENV_DIR
+
+    set -l _trimmed_dir (echo $DIRENV_DIR | string trim --left --chars=-)
+    if test "$BULLETTRAIN_DIR_ENV_PATH_SHOW" = "true"
+      set _dir_env_prompt "$_trimmed_dir"
+    else
+      set _dir_env_prompt "$BULLETTRAIN_DIR_ENV_MSG"
+    end
+
+    set -l _env_file
+    if test -f "$_trimmed_dir/.envrc" 
+      set _env_file "$_trimmed_dir/.envrc" 
+    else if test -f "$_trimmed_dir/.env" 
+      set _env_file "$_trimmed_dir/.env"
+    end
+
+    if test (cat "$_env_file" | string trim) = "use_nix"; 
+      set _dir_env_prompt "$BULLETTRAIN_DIR_ENV_NIX_PREFIX" "$_dir_env_prompt"
+    else 
+      set _dir_env_prompt "$BULLETTRAIN_DIR_ENV_PREFIX" "$_dir_env_prompt"
+    end
+
+    prompt_segment $BULLETTRAIN_DIR_ENV_BG $BULLETTRAIN_DIR_ENV_FG "$_dir_env_prompt"
+  end
+end
+
+fish_prompt
