@@ -147,7 +147,7 @@ function setup_parameters -d "Set default value if parameter is not declared"
   set -q BULLETTRAIN_DIR_ENV_PATH_SHOW; or set -g BULLETTRAIN_DIR_ENV_PATH_SHOW
   set -q BULLETTRAIN_DIR_ENV_PREFIX; or set -g BULLETTRAIN_DIR_ENV_PREFIX " "
   set -q BULLETTRAIN_DIR_ENV_NIX_PREFIX; or set -g BULLETTRAIN_DIR_ENV_NIX_PREFIX " "
-  set -q BULLETTRAIN_DIR_ENV_MSG; or set -g BULLETTRAIN_DIR_ENV_MSG 
+  set -q BULLETTRAIN_DIR_ENV_MSG; or set -g BULLETTRAIN_DIR_ENV_MSG
   set -l _prompt_order \
     time \
     status \
@@ -163,7 +163,7 @@ function setup_parameters -d "Set default value if parameter is not declared"
     git \
     hg \
     kctx \
-    cmd_exec_time 
+    cmd_exec_time
   test "$BULLETTRAIN_PROMPT_ORDER"; or set -g BULLETTRAIN_PROMPT_ORDER $_prompt_order
 end
 
@@ -560,20 +560,18 @@ function prompt_dir_env
     end
 
     set -l _env_file
-    if test -f "$_trimmed_dir/.envrc" 
-      set _env_file "$_trimmed_dir/.envrc" 
-    else if test -f "$_trimmed_dir/.env" 
+    if test -f "$_trimmed_dir/.envrc"
+      set _env_file "$_trimmed_dir/.envrc"
+    else if test -f "$_trimmed_dir/.env"
       set _env_file "$_trimmed_dir/.env"
     end
 
-    if test (cat "$_env_file" | string trim) = "use_nix"; 
+    if test (cat "$_env_file" | string trim) = "use_nix";
       set _dir_env_prompt "$BULLETTRAIN_DIR_ENV_NIX_PREFIX" "$_dir_env_prompt"
-    else 
+    else
       set _dir_env_prompt "$BULLETTRAIN_DIR_ENV_PREFIX" "$_dir_env_prompt"
     end
 
     prompt_segment $BULLETTRAIN_DIR_ENV_BG $BULLETTRAIN_DIR_ENV_FG "$_dir_env_prompt"
   end
 end
-
-fish_prompt
