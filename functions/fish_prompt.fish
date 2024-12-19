@@ -135,6 +135,7 @@ function setup_parameters -d "Set default value if parameter is not declared"
   set -q BULLETTRAIN_KCTX_KCONFIG; or set -g BULLETTRAIN_KCTX_KCONFIG "$HOME/.kube/config"
   set -q BULLETTRAIN_KCTX_KUBECTL; or set -g BULLETTRAIN_KCTX_KUBECTL true
   set -q BULLETTRAIN_KCTX_NAMESPACE; or set -g BULLETTRAIN_KCTX_NAMESPACE true
+  set -q BULLETTRAIN_KCTX_AK_URL; or set -g BULLETTRAIN_KCTX_AK_URL true
   # time
   set -q BULLETTRAIN_EXEC_TIME_SHOW; or set -g BULLETTRAIN_EXEC_TIME_SHOW
   set -q BULLETTRAIN_EXEC_TIME_ELAPSED; or set -g BULLETTRAIN_EXEC_TIME_ELAPSED 5
@@ -153,6 +154,7 @@ function setup_parameters -d "Set default value if parameter is not declared"
     status \
     custom \
     context \
+    kctx \
     dir_env \
     dir \
     perl \
@@ -162,7 +164,6 @@ function setup_parameters -d "Set default value if parameter is not declared"
     go \
     git \
     hg \
-    kctx \
     cmd_exec_time
   test "$BULLETTRAIN_PROMPT_ORDER"; or set -g BULLETTRAIN_PROMPT_ORDER $_prompt_order
 end
@@ -508,7 +509,19 @@ function prompt_kctx -d "Show Kubernetes context"
   test "$BULLETTRAIN_KCTX_SHOW" = "true"; or return
   set -l _kctx_prompt
 
-  if test "$BULLETTRAIN_KCTX_KUBECTL" = "true"; and test (command -v kubectl)
+  if test $BULLETTRAIN_KCTX_AK_URL = "true"
+    set -l ak_context "none"
+    if test -n "$AK_URL"
+      if string match -q "*kind" "$AK_URL"
+        set ak_context (echo $AK_URL | cut -d'/' -f3)
+      else if string match -q "file://*" $AK_URL
+        set ak_context (akutil context current | cut -d'/' -f5)
+      else
+        set ak_context (echo $AK_URL | cut -d'/' -f5 | cut -d'?' -f1)
+      end
+    end
+    set _kctx_prompt $ak_context
+  else if test "$BULLETTRAIN_KCTX_KUBECTL" = "true"; and test (command -v kubectl)
     set -l _jsonpath '{.current-context}'
     test "$BULLETTRAIN_KCTX_NAMESPACE" = "true";
       and set _jsonpath "$_jsonpath{':'}{..namespace}"
