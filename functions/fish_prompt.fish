@@ -577,7 +577,7 @@ function prompt_kctx -d "Show Kubernetes context"
   test "$BULLETTRAIN_KCTX_SHOW" = "true"; or return
   set -l _kctx_prompt
 
-  if test $BULLETTRAIN_KCTX_AK_URL = "true"
+  if test "$BULLETTRAIN_KCTX_AK_URL" = "true"
     set -l ak_context "none"
     if test -n "$AK_URL"
       if string match -q "*kind" "$AK_URL"
