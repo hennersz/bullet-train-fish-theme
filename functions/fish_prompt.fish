@@ -46,8 +46,11 @@ function setup_parameters -d "Set default value if parameter is not declared"
   set -q BULLETTRAIN_CONTEXT_DEFAULT_USER; or set -g BULLETTRAIN_CONTEXT_DEFAULT_USER
   set -q BULLETTRAIN_CONTEXT_HOSTNAME; or set -g BULLETTRAIN_CONTEXT_HOSTNAME (hostname -s)
   set -q BULLETTRAIN_IS_SSH_CLIENT;
-    or test -n SSH_CONNECTION -o -n SSH_TTY -o -n SSH_CLIENT; and set -g BULLETTRAIN_IS_SSH_CLIENT true;
-    or set -g BULLETTRAIN_IS_SSH_CLIENT
+    or if test -n $SSH_CONNECTION -o -n $SSH_TTY -o -n $SSH_CLIENT
+      set -g BULLETTRAIN_IS_SSH_CLIENT true
+    else
+      set -g BULLETTRAIN_IS_SSH_CLIENT
+    end
   # dir
   set -q BULLETTRAIN_DIR_SHOW; or set -g BULLETTRAIN_DIR_SHOW true
   set -q BULLETTRAIN_DIR_BG; or set -g BULLETTRAIN_DIR_BG blue
