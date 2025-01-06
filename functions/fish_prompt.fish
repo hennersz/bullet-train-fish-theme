@@ -45,26 +45,28 @@ function setup_parameters -d "Set default value if parameter is not declared"
   set -q BULLETTRAIN_CONTEXT_FG; or set -g BULLETTRAIN_CONTEXT_FG white
   set -q BULLETTRAIN_CONTEXT_DEFAULT_USER; or set -g BULLETTRAIN_CONTEXT_DEFAULT_USER
   set -q BULLETTRAIN_CONTEXT_HOSTNAME; or set -g BULLETTRAIN_CONTEXT_HOSTNAME (hostname -s)
-  set -q BULLETTRAIN_IS_SSH_CLIENT; or set -g BULLETTRAIN_IS_SSH_CLIENT
+  set -q BULLETTRAIN_IS_SSH_CLIENT;
+    or test -n SSH_CONNECTION -o -n SSH_TTY -o -n SSH_CLIENT and set -g BULLETTRAIN_IS_SSH_CLIENT true;
+    or set -g BULLETTRAIN_IS_SSH_CLIENT
   # dir
   set -q BULLETTRAIN_DIR_SHOW; or set -g BULLETTRAIN_DIR_SHOW true
   set -q BULLETTRAIN_DIR_BG; or set -g BULLETTRAIN_DIR_BG blue
   set -q BULLETTRAIN_DIR_FG; or set -g BULLETTRAIN_DIR_FG white
   set -q BULLETTRAIN_DIR_CONTEXT_SHOW; or set -g BULLETTRAIN_DIR_CONTEXT_SHOW
-  set -q BULLETTRAIN_DIR_EXTENDED; or set -g BULLETTRAIN_DIR_EXTENDED 0
+  set -q BULLETTRAIN_DIR_EXTENDED; or set -g BULLETTRAIN_DIR_EXTENDED 3
   # perl
   set -q BULLETTRAIN_PERL_SHOW; or set -g BULLETTRAIN_PERL_SHOW
   set -q BULLETTRAIN_PERL_BG; or set -g BULLETTRAIN_PERL_BG yellow
   set -q BULLETTRAIN_PERL_FG; or set -g BULLETTRAIN_PERL_FG white
   set -q BULLETTRAIN_PERL_PREFIX; or set -g BULLETTRAIN_PERL_PREFIX "🐪 "
   # ruby
-  set -q BULLETTRAIN_RUBY_SHOW; or set -g BULLETTRAIN_RUBY_SHOW true
+  set -q BULLETTRAIN_RUBY_SHOW; or set -g BULLETTRAIN_RUBY_SHOW
   set -q BULLETTRAIN_RUBY_BG; or set -g BULLETTRAIN_RUBY_BG magenta
   set -q BULLETTRAIN_RUBY_FG; or set -g BULLETTRAIN_RUBY_FG white
   set -q BULLETTRAIN_RUBY_PREFIX; or set -g BULLETTRAIN_RUBY_PREFIX "💎 "
   set -q BULLETTRAIN_RUBY_SHOW_SYSTEM; or set -g BULLETTRAIN_RUBY_SHOW_SYSTEM true
   # python
-  set -q BULLETTRAIN_PYTHON_SHOW; or set -g BULLETTRAIN_PYTHON_SHOW true
+  set -q BULLETTRAIN_PYTHON_SHOW; or set -g BULLETTRAIN_PYTHON_SHOW
   set -q BULLETTRAIN_PYTHON_BG; or set -g BULLETTRAIN_PYTHON_BG yellow
   set -q BULLETTRAIN_PYTHON_FG; or set -g BULLETTRAIN_PYTHON_FG white
   set -q BULLETTRAIN_PYTHON_PREFIX; or set -g BULLETTRAIN_PYTHON_PREFIX "🐍 "
@@ -117,7 +119,7 @@ function setup_parameters -d "Set default value if parameter is not declared"
   set -q BULLETTRAIN_GIT_DIVERGED; or set -g BULLETTRAIN_GIT_DIVERGED ⬍
   set -q BULLETTRAIN_GIT_DISABLE_UNTRACKED_FILES_DIRTY; or set -g BULLETTRAIN_GIT_DISABLE_UNTRACKED_FILES_DIRTY
   # mercurial/hg
-  set -q BULLETTRAIN_HG_SHOW; or set -g BULLETTRAIN_HG_SHOW true
+  set -q BULLETTRAIN_HG_SHOW; or set -g BULLETTRAIN_HG_SHOW
   set -q BULLETTRAIN_HG_COLORIZE_DIRTY; or set -g BULLETTRAIN_HG_COLORIZE_DIRTY
   set -q BULLETTRAIN_HG_COLORIZE_DIRTY_BG; or set -g BULLETTRAIN_HG_COLORIZE_DIRTY_BG yellow
   set -q BULLETTRAIN_HG_COLORIZE_DIRTY_FG; or set -g BULLETTRAIN_HG_COLORIZE_DIRTY_FG black
@@ -128,16 +130,16 @@ function setup_parameters -d "Set default value if parameter is not declared"
   set -q BULLETTRAIN_HG_NOT_ADDED_FG; or set -g BULLETTRAIN_HG_NOT_ADDED_FG green
   set -q BULLETTRAIN_HG_MODIFIED_FG; or set -g BULLETTRAIN_HG_MODIFIED_FG blue
   # kubernetes context
-  set -q BULLETTRAIN_KCTX_SHOW; or set -g BULLETTRAIN_KCTX_SHOW true
+  set -q BULLETTRAIN_KCTX_SHOW; or set -g BULLETTRAIN_KCTX_SHOW
   set -q BULLETTRAIN_KCTX_BG; or set -g BULLETTRAIN_KCTX_BG yellow
   set -q BULLETTRAIN_KCTX_FG; or set -g BULLETTRAIN_KCTX_FG white
   set -q BULLETTRAIN_KCTX_PREFIX; or set -g BULLETTRAIN_KCTX_PREFIX ⎈
   set -q BULLETTRAIN_KCTX_KCONFIG; or set -g BULLETTRAIN_KCTX_KCONFIG "$HOME/.kube/config"
   set -q BULLETTRAIN_KCTX_KUBECTL; or set -g BULLETTRAIN_KCTX_KUBECTL true
   set -q BULLETTRAIN_KCTX_NAMESPACE; or set -g BULLETTRAIN_KCTX_NAMESPACE true
-  set -q BULLETTRAIN_KCTX_AK_URL; or set -g BULLETTRAIN_KCTX_AK_URL true
+  set -q BULLETTRAIN_KCTX_AK_URL; or set -g BULLETTRAIN_KCTX_AK_URL
   # time
-  set -q BULLETTRAIN_EXEC_TIME_SHOW; or set -g BULLETTRAIN_EXEC_TIME_SHOW
+  set -q BULLETTRAIN_EXEC_TIME_SHOW; or set -g BULLETTRAIN_EXEC_TIME_SHOW true
   set -q BULLETTRAIN_EXEC_TIME_ELAPSED; or set -g BULLETTRAIN_EXEC_TIME_ELAPSED 5
   set -q BULLETTRAIN_EXEC_TIME_BG; or set -g BULLETTRAIN_EXEC_TIME_BG yellow
   set -q BULLETTRAIN_EXEC_TIME_FG; or set -g BULLETTRAIN_EXEC_TIME_FG black
@@ -166,6 +168,62 @@ function setup_parameters -d "Set default value if parameter is not declared"
     hg \
     cmd_exec_time
   test "$BULLETTRAIN_PROMPT_ORDER"; or set -g BULLETTRAIN_PROMPT_ORDER $_prompt_order
+end
+
+function show-git
+  set -gx BULLETTRAIN_GIT_SHOW true
+end
+
+function hide-git
+  set -gu BULLETTRAIN_GIT_SHOW
+end
+
+function show-python
+  set -gx BULLETTRAIN_PYTHON_SHOW true
+end
+
+function hide-python
+  set -gu BULLETTRAIN_PYTHON_SHOW
+end
+
+function show-node
+  set -gx BULLETTRAIN_NODEJS_SHOW true
+end
+
+function hide-node
+  set -gu BULLETTRAIN_NODEJS_SHOW
+end
+
+function show-go
+  set -gx BULLETTRAIN_GO_SHOW true
+end
+
+function hide-go
+  set -gu BULLETTRAIN_GO_SHOW
+end
+
+function show-ruby
+  set -gx BULLETTRAIN_RUBY_SHOW true
+end
+
+function hide-ruby
+  set -gu BULLETTRAIN_RUBY_SHOW
+end
+
+function show-perl
+  set -gx BULLETTRAIN_PERL_SHOW true
+end
+
+function hide-perl
+  set -gu BULLETTRAIN_PERL_SHOW
+end
+
+function show-k8s
+  set -gx BULLETTRAIN_KCTX_SHOW true
+end
+
+function hide-k8s
+  set -gu BULLETTRAIN_KCTX_SHOW
 end
 
 function prompt_segment -a bg fg prompt
@@ -253,8 +311,15 @@ function prompt_custom -d "Show custome message"
 end
 
 function context
-  test "$USER" != "$BULLETTRAIN_CONTEXT_DEFAULT_USER" -o -n "$BULLETTRAIN_IS_SSH_CLIENT";
-    and echo -n "$USER@$BULLETTRAIN_CONTEXT_HOSTNAME"
+  set -l _context
+
+  if test -n "$BULLETTRAIN_IS_SSH_CLIENT" -a "$USER" != "$BULLETTRAIN_CONTEXT_DEFAULT_USER"
+    echo -n "$USER@$BULLETTRAIN_CONTEXT_HOSTNAME"
+  else if test -n "$BULLETTRAIN_IS_SSH_CLIENT"
+    echo -n $BULLETTRAIN_CONTEXT_HOSTNAME
+  else if test "$USER" != "$BULLETTRAIN_CONTEXT_DEFAULT_USER"
+    echo -n $USER
+  end
 end
 
 function prompt_context -d "Show context"
@@ -536,10 +601,10 @@ function prompt_kctx -d "Show Kubernetes context"
 end
 
 function displaytime -a t
-  set -l _d (math $t/60/60/24)
-  set -l _h (math $t/60/60%24)
-  set -l _m (math $t/60%60)
-  set -l _s (math $t%60)
+  set -l _d (math "floor($t/60/60/24)")
+  set -l _h (math "floor($t/60/60)%24")
+  set -l _m (math "floor($t/60)%60")
+  set -l _s (math "floor($t)%60")
   test $_d -gt 0; and printf '%dd' $_d
   test $_h -gt 0; and printf '%dh' $_h
   test $_m -gt 0; and printf '%dm' $_m
@@ -552,11 +617,11 @@ function prompt_cmd_exec_time -d "Show last command exection time"
   set -l duration
   test "$CMD_DURATION";
     and set _duration (math $CMD_DURATION/1000);
-      and test $_duration -gt $BULLETTRAIN_EXEC_TIME_ELAPSED;
-        and prompt_segment \
-          $BULLETTRAIN_EXEC_TIME_BG \
-          $BULLETTRAIN_EXEC_TIME_FG \
-          (displaytime $_duration);
+    and test $_duration -gt $BULLETTRAIN_EXEC_TIME_ELAPSED;
+    and prompt_segment \
+      $BULLETTRAIN_EXEC_TIME_BG \
+      $BULLETTRAIN_EXEC_TIME_FG \
+      (displaytime $_duration);
 end
 
 function prompt_dir_env
@@ -580,6 +645,8 @@ function prompt_dir_env
     end
 
     if test (cat "$_env_file" | string trim) = "use_nix";
+      set _dir_env_prompt "$BULLETTRAIN_DIR_ENV_NIX_PREFIX" "$_dir_env_prompt"
+    else if test (cat "$_env_file" | string trim) = "use flake --impure"
       set _dir_env_prompt "$BULLETTRAIN_DIR_ENV_NIX_PREFIX" "$_dir_env_prompt"
     else
       set _dir_env_prompt "$BULLETTRAIN_DIR_ENV_PREFIX" "$_dir_env_prompt"
