@@ -485,8 +485,8 @@ function is_git_dirty
   test "$_status"; and echo true
 end
 
-function git_compare_version -a version
-  set -l _input_git_version (string split "." $version)
+function git_compare_version -a git_version
+  set -l _input_git_version (string split "." $git_version)
   set -l _installed_git_version (string split "." (git --version 2> /dev/null | cut -d' ' -f3))
   for i in (seq 3)
     test $_installed_git_version[$i] -gt $_input_git_version[$i];
